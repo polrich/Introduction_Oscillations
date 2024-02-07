@@ -1,3 +1,31 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Feb  6 16:29:32 2024
+
+@author: Richi
+"""
+"""
+Editor: Richard Polzer
+Date: 19.01.2024
+
+This code will animate a simplified cumbustion engine
+User entries:
+    l: length of the rod
+
+   ^ y
+   |
+   |
+   
+   P
+   \
+    \
+     \ l
+      \-----> x
+      /
+     / r
+    /
+"""
+
 import numpy as np
 from numpy import pi, sin, cos, sqrt
 import matplotlib.pyplot as plt
@@ -5,7 +33,7 @@ import matplotlib.animation as animation
 
 # Close all open figures
 plt.close('all')
-%matplotlib qt
+%matplotlib qt 
 
 # input parameters
 # l = 4.0  # connecting rod length -> harmonic
@@ -21,20 +49,20 @@ angles = np.arange(0, rot_num * 2 * pi + increment, increment)
 
 X1 = np.zeros(len(angles))  # array of crank x-positions: Point 1
 Y1 = np.zeros(len(angles))  # array of crank y-positions: Point 1
-X2 = np.zeros(len(angles))  # array of rod x-positions: Point 2
-Y2 = np.zeros(len(angles))  # array of rod y-positions: Point 2
+X = np.zeros(len(angles))  # array of rod x-positions: Point 2
+Y = np.zeros(len(angles))  # array of rod y-positions: Point 2
 
-for index, theta in enumerate(angles, start=0):
-    x1 = r * cos(theta)  # x-coordinate of the crank: Point 1
-    y1 = r * sin(theta)  # y-coordinate of the crank: Point 1
-    x2 = 0  # x-coordinate of the rod: Point 2
+for index, omega in enumerate(angles, start=0):
+    x1 = r * sin(omega)  # x-coordinate of the crank: Point 1
+    y1 = r * cos(omega)  # y-coordinate of the crank: Point 1
+    x = 0  # x-coordinate of the rod: Point 2
     # y-coordinate of the rod: Point 2
-    y2 = r * sin(theta) + sqrt(l**2 - (r * cos(theta))**2)
+    y = r * cos(omega) + sqrt(l**2 - (r * sin(omega))**2)
 
     X1[index] = x1  # crankshaft x-position
     Y1[index] = y1  # crankshaft y-position
-    X2[index] = x2  # connecting rod x-position
-    Y2[index] = y2  # connecting rod y-position
+    X[index] = x  # connecting rod x-position
+    Y[index] = y  # connecting rod y-position
 
 # set up the figure with subplots
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
@@ -58,8 +86,8 @@ def init1():
 
 # animation function for subplot 1
 def animate1(i):
-    x_points = [0, X1[i], X2[i]]
-    y_points = [0, Y1[i], Y2[i]]
+    x_points = [0, X1[i], X[i]]
+    y_points = [0, Y1[i], Y[i]]
 
     line1.set_data(x_points, y_points)
     return line1,
@@ -88,7 +116,7 @@ def init2():
 # animation function for subplot 2
 def animate2(i):
     x_points = np.arange(i + 1)
-    y_points = Y2[:i + 1]  # Use Y2 for piston oscillation
+    y_points = Y[:i + 1]  # Use Y2 for piston oscillation
 
     line2.set_data(x_points, y_points)
     return line2,
